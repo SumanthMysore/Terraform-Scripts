@@ -14,6 +14,9 @@ module "eks" {
     "Description" = lookup(var.cluster.tags, "Description")
   }
 
+  create_iam_role = false
+  iam_role_arn = data.aws_iam_role.cluster_iam_role.arn
+
   cluster_addons = {
     coredns = {
       most_recent = contains(var.cluster.addons, "coredns")
@@ -40,4 +43,8 @@ module "eks" {
       desired_size   = var.node_group.desired_size
     }
   }
+}
+
+data "aws_iam_role" "cluster_iam_role" {
+  name = "eks-cluster"
 }

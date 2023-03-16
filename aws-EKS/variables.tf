@@ -1,7 +1,7 @@
 variable "cluster" {
   default = {
-    name               = "bc-75"
-    kubernetes_version = "1.24"
+    name               = "bc-71"
+    kubernetes_version = "1.23"
     vpc = {
       vpc_id     = "vpc-009470e55cc89e05e"
       subnet_ids = ["subnet-051b703b3e3db09a5", 
@@ -11,7 +11,7 @@ variable "cluster" {
     }
     tags = {
       "Created By"  = "Sumanth Mysore"
-      "Description" = "EKS Cluster created for Bootcamp-75 deployment"
+      "Description" = "EKS Cluster created for Bootcamp-71 deployment using Terraform"
     }
     endpoint_access = "public"
     addons = ["coredns", "kube-proxy", "vpc-cni"]
@@ -35,10 +35,10 @@ variable "node_group" {
     desired_size   = number
   })
   default = {
-    name           = "bc-75-node"
+    name           = "bc-71-node"
     instance_types = ["t3.medium"]
-    min_size       = 1
+    min_size       = 3
     max_size       = 3
-    desired_size   = 2
+    desired_size   = 3
   }
 }
