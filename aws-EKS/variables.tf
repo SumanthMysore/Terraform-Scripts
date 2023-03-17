@@ -3,18 +3,19 @@ variable "cluster" {
     name               = "bc-71"
     kubernetes_version = "1.23"
     vpc = {
-      vpc_id     = "vpc-009470e55cc89e05e"
-      subnet_ids = ["subnet-051b703b3e3db09a5", 
-                    "subnet-08210e4584335dfda", 
-                    "subnet-06fc373b96fc60783"
-                    ]
+      vpc_id = "vpc-009470e55cc89e05e"
+      subnet_ids = [
+        "subnet-051b703b3e3db09a5",
+        "subnet-08210e4584335dfda",
+        "subnet-06fc373b96fc60783"
+      ]
     }
     tags = {
       "Created By"  = "Sumanth Mysore"
       "Description" = "EKS Cluster created for Bootcamp-71 deployment using Terraform"
     }
     endpoint_access = "public"
-    addons = ["coredns", "kube-proxy", "vpc-cni"]
+    addons          = ["coredns", "kube-proxy", "vpc-cni"]
   }
 }
 

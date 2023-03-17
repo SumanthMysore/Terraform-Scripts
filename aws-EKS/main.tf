@@ -1,21 +1,28 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "19.0.4"
+  version = "19.10.0"
 
   cluster_name    = var.cluster.name
   cluster_version = var.cluster.kubernetes_version
 
-  vpc_id                         = var.cluster.vpc.vpc_id
-  subnet_ids                     = var.cluster.vpc.subnet_ids
-  cluster_endpoint_public_access = (var.cluster.endpoint_access == "public") ? true : false
+  vpc_id                          = var.cluster.vpc.vpc_id
+  subnet_ids                      = var.cluster.vpc.subnet_ids
+  cluster_endpoint_public_access  = (var.cluster.endpoint_access == "public") ? true : false
+  cluster_endpoint_private_access = false
 
   tags = {
     "Created By"  = lookup(var.cluster.tags, "Created By")
     "Description" = lookup(var.cluster.tags, "Description")
   }
 
+  create_kms_key            = false
+  cluster_encryption_config = {}
+
+  create_cloudwatch_log_group = false
+  cluster_enabled_log_types   = []
+
   create_iam_role = false
-  iam_role_arn = data.aws_iam_role.cluster_iam_role.arn
+  iam_role_arn    = data.aws_iam_role.cluster_iam_role.arn
 
   cluster_addons = {
     coredns = {
