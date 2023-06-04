@@ -27,13 +27,13 @@ module "eks" {
 
   cluster_addons = {
     coredns = {
-      most_recent = contains(var.cluster.addons, "coredns")
+      most_recent = true
     }
     kube-proxy = {
-      most_recent = contains(var.cluster.addons, "kube-proxy")
+      most_recent = true
     }
     vpc-cni = {
-      most_recent = contains(var.cluster.addons, "vpc-cni")
+      most_recent = true
     }
   }
 

@@ -36,7 +36,7 @@ variable "node_group" {
     desired_size   = number
   })
   default = {
-    name           = "ingress-test-eks-node"
+    name           = "bc-100-eks-node"
     instance_types = ["t3.medium"]
     min_size       = 3
     max_size       = 3

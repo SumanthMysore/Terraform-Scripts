@@ -16,7 +16,6 @@ variable "cluster" {
       "description" = "EKS Cluster created for Bootcamp-85 deployment using Terraform"
     }
     endpoint_access = "public"
-    addons          = ["coredns", "kube-proxy", "vpc-cni"]
   }
 }
 
