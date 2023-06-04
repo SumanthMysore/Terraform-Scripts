@@ -27,13 +27,13 @@ module "eks" {
 
   cluster_addons = {
     coredns = {
-      most_recent = contains(var.cluster.addons, "coredns")
+      most_recent = true
     }
     kube-proxy = {
-      most_recent = contains(var.cluster.addons, "kube-proxy")
+      most_recent = true
     }
     vpc-cni = {
-      most_recent = contains(var.cluster.addons, "vpc-cni")
+      most_recent = true
     }
   }
 
@@ -55,4 +55,22 @@ module "eks" {
 
 data "aws_iam_role" "cluster_iam_role" {
   name = "eks-cluster"
+}
+
+data "kubectl_file_documents" "docs" {
+  content = templatefile("${path.module}/ingress-nginx-controller.yml", {
+    acm_cert_arn = var.ingress-nginx-controller.acm_cert_arn
+  })
+}
+
+resource "kubectl_manifest" "test" {
+  for_each  = data.kubectl_file_documents.docs.manifests
+  yaml_body = each.value
+  depends_on = [
+    module.eks
+  ]
+}
+
+data "aws_eks_cluster_auth" "for_token" {
+  name = module.eks.cluster_name
 }

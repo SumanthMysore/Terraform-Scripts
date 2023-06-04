@@ -1,6 +1,6 @@
 variable "cluster" {
   default = {
-    name               = "bc-85"
+    name               = "bc-100"
     kubernetes_version = "1.23"
     vpc = {
       vpc_id = "vpc-009470e55cc89e05e"
@@ -16,7 +16,6 @@ variable "cluster" {
       "description" = "EKS Cluster created for Bootcamp-85 deployment using Terraform"
     }
     endpoint_access = "public"
-    addons          = ["coredns", "kube-proxy", "vpc-cni"]
   }
 }
 
@@ -37,10 +36,19 @@ variable "node_group" {
     desired_size   = number
   })
   default = {
-    name           = "bc-85-eks-node"
+    name           = "ingress-test-eks-node"
     instance_types = ["t3.medium"]
     min_size       = 3
     max_size       = 3
     desired_size   = 3
+  }
+}
+
+variable "ingress-nginx-controller" {
+  type = object({
+    acm_cert_arn = string
+  })
+  default = {
+    acm_cert_arn = "arn:aws:acm:us-east-2:365299945243:certificate/372b91a9-f14e-4ee9-bddc-6f8c34993840"
   }
 }
