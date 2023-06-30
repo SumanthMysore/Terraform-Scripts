@@ -10,7 +10,7 @@ resource "aws_instance" "myinstance" {
     "description" = var.instance.tags["description"]
     "owner"       = var.instance.tags["owner"]
   }
-  key_name               = aws_key_pair.my-key.id
+  key_name               = data.aws_key_pair.keypair.key_name
   vpc_security_group_ids = [aws_security_group.my_sg.id]
 
   provisioner "file" {
@@ -32,8 +32,8 @@ resource "aws_instance" "myinstance" {
   }
 }
 
-resource "aws_key_pair" "my-key" {
-  public_key = file("${var.public_key}")
+data "aws_key_pair" "keypair" {
+  key_name = var.instance.key_name
 }
 
 resource "aws_security_group" "my_sg" {}
