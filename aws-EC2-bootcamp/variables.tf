@@ -1,6 +1,6 @@
 variable "instance" {
   default = {
-    name          = "bc-87"
+    name          = "bc-97"
     ami           = "ami-0283a57753b18025b"
     instance_type = "t3.large"
     storage       = 30
