@@ -10,7 +10,3 @@ output "eks_token" {
   sensitive = true
   value     = data.aws_eks_cluster_auth.for_token.token
 }
-
-output "eks_cluster" {
-  value = module.eks
-}
