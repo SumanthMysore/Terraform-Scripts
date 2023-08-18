@@ -1,19 +1,18 @@
 variable "cluster" {
   default = {
-    name               = "eks-test-sumanthmysore"
+    name               = "bc-112"
     kubernetes_version = "1.23"
     vpc = {
       vpc_id = "vpc-009470e55cc89e05e"
       subnet_ids = [
         "subnet-051b703b3e3db09a5",
-        "subnet-08210e4584335dfda",
-        "subnet-06fc373b96fc60783"
+        "subnet-08210e4584335dfda"
       ]
     }
     tags = {
       "Created By"  = "Sumanth Mysore"
       "owner"       = "sumanth.mysore@zemosolabs.com"
-      "description" = "EKS Cluster created for testing purpose using Terraform"
+      "description" = "EKS Cluster created for Bootcamp-112 using Terraform"
     }
     endpoint_public_access = true
   }
@@ -36,7 +35,7 @@ variable "node_group" {
     desired_size   = number
   })
   default = {
-    name           = "bc-test-eks-node"
+    name           = "bc-112-eks-node"
     instance_types = ["t3.medium"]
     min_size       = 2
     max_size       = 2
