@@ -1,0 +1,260 @@
+Changes to Outputs:
+  + vpn_gateway = {
+      + gateway1 = {
+          + local_network_gateways              = {}
+          + public_ip_addresses                 = {
+              + public_ip = {
+                  + id         = "/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourceGroups/tf-vnet-rg/providers/Microsoft.Network/publicIPAddresses/pip-tf-vnet1-GW-public_ip"
+                  + ip_address = "20.114.139.130"
+                  + name       = "pip-tf-vnet1-GW-public_ip"
+                }
+            }
+          + route_table                         = {
+              + id   = null
+              + name = null
+            }
+          + subnet                              = {
+              + id   = "/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourceGroups/tf-vnet-rg/providers/Microsoft.Network/virtualNetworks/tf-vnet1/subnets/GatewaySubnet"
+              + name = "GatewaySubnet"
+            }
+          + virtual_network_gateway             = {
+              + bgp_settings = []
+              + id           = "/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourceGroups/tf-vnet-rg/providers/Microsoft.Network/virtualNetworkGateways/tf-vnet1-GW"
+              + name         = "tf-vnet1-GW"
+            }
+          + virtual_network_gateway_connections = {
+              + erc = {}
+              + lgw = {}
+            }
+        }
+      + gateway2 = {
+          + local_network_gateways              = {}
+          + public_ip_addresses                 = {
+              + public_ip = {
+                  + id         = "/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourceGroups/tf-vnet-rg/providers/Microsoft.Network/publicIPAddresses/pip-tf-vnet2-GW-public_ip"
+                  + ip_address = "20.186.172.25"
+                  + name       = "pip-tf-vnet2-GW-public_ip"
+                }
+            }
+          + route_table                         = {
+              + id   = null
+              + name = null
+            }
+          + subnet                              = {
+              + id   = "/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourceGroups/tf-vnet-rg/providers/Microsoft.Network/virtualNetworks/tf-vnet2/subnets/GatewaySubnet"
+              + name = "GatewaySubnet"
+            }
+          + virtual_network_gateway             = {
+              + bgp_settings = []
+              + id           = "/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourceGroups/tf-vnet-rg/providers/Microsoft.Network/virtualNetworkGateways/tf-vnet2-GW"
+              + name         = "tf-vnet2-GW"
+            }
+          + virtual_network_gateway_connections = {
+              + erc = {}
+              + lgw = {}
+            }
+        }
+    }
+
+You can apply this plan to save these new output values to the Terraform state, without changing any real infrastructure.
+
+---------------------------------------------------------------
+
+# VPN Gateway
+
+module "vnet-gateway" {
+  source  = "Azure/vnet-gateway/azurerm"
+  version = "0.1.2"
+
+  for_each = var.vnet_gateways
+
+  location                            = each.value.virtual_network_location
+  name                                = each.value.name
+  sku                                 = each.value.sku
+  vpn_generation                      = each.value.generation
+  subnet_address_prefix               = each.value.gateway_subnet_address_prefix
+  type                                = each.value.type
+  virtual_network_name                = each.value.virtual_network_name
+  virtual_network_resource_group_name = each.value.virtual_network_resource_group_name
+  vpn_active_active_enabled           = each.value.vpn_active_active_enabled
+  ip_configurations = {
+    public_ip = {
+      name              = each.value.public_ip.name
+      allocation_method = each.value.public_ip.allocation_method
+      sku               = each.value.public_ip.sku
+    }
+  }
+
+  depends_on = [
+    azurerm_virtual_network.vnets
+  ]
+}
+
+# Vnet-to-Vnet Connection
+
+resource "azurerm_virtual_network_gateway_connection" "Vnet2Vnet" {
+
+  for_each = var.Connections
+
+  name                            = each.value.connection_name
+  location                        = each.value.location
+  resource_group_name             = each.value.resource_group
+  type                            = each.value.connection_type
+  virtual_network_gateway_id      = each.value.gateway1_ID
+  peer_virtual_network_gateway_id = each.value.gateway2_ID
+
+  shared_key = each.value.shared_key
+}
+
+output "vpn_gateway" {
+  value = module.vnet-gateway
+}
+
+
+------------------------------------------------------------
+
+variable "resource_group" {
+  type = map(string)
+  default = {
+    name     = "tf-vnet-rg"
+    location = "East US 2"
+  }
+}
+
+variable "vnets" {
+  type = map(object({
+    name          = string
+    address_space = list(string)
+    tags          = map(string)
+  }))
+  default = {
+    "tf-vnet1" = {
+      name          = "tf-vnet1"
+      address_space = ["12.1.0.0/16"]
+      tags = {
+        "owner"       = "sumanth.mysore@zemosolabs.com"
+        "environment" = "dev"
+      }
+    },
+    "tf-vnet2" = {
+      name          = "tf-vnet2"
+      address_space = ["12.2.0.0/16"]
+      tags = {
+        "owner"       = "sumanth.mysore@zemosolabs.com"
+        "environment" = "dev"
+      }
+    },
+  }
+}
+
+variable "subnets" {
+  type = map(object({
+    name                 = string
+    address_space        = list(string)
+    virtual_network_name = string
+  }))
+  default = {
+    "tf-vnet1_subnet1" = {
+      name                 = "tf-vnet1_subnet1"
+      address_space        = ["12.1.0.0/24"]
+      virtual_network_name = "tf-vnet1"
+    },
+    "tf-vnet1_subnet2" = {
+      name                 = "tf-vnet1_subnet2"
+      address_space        = ["12.1.1.0/24"]
+      virtual_network_name = "tf-vnet1"
+    },
+
+    "tf-vnet2_subnet1" = {
+      name                 = "tf-vnet2_subnet1"
+      address_space        = ["12.2.0.0/24"]
+      virtual_network_name = "tf-vnet2"
+    },
+    "tf-vnet2_subnet2" = {
+      name                 = "tf-vnet2_subnet2"
+      address_space        = ["12.2.1.0/24"]
+      virtual_network_name = "tf-vnet2"
+    }
+  }
+}
+
+variable "vnet_gateways" {
+  type = map(object({
+    name                                = string
+    type                                = string
+    sku                                 = string
+    generation                          = string
+    virtual_network_name                = string
+    virtual_network_location            = string
+    virtual_network_resource_group_name = string
+    gateway_subnet_address_prefix       = string
+    vpn_active_active_enabled           = bool
+    public_ip                           = map(string)
+  }))
+  default = {
+    gateway1 = {
+      name                                = "tf-vnet1-GW"
+      type                                = "Vpn"
+      sku                                 = "Basic"
+      generation                          = "Generation1"
+      virtual_network_name                = "tf-vnet1"
+      virtual_network_location            = "East US 2"
+      virtual_network_resource_group_name = "tf-vnet-rg"
+      gateway_subnet_address_prefix       = "12.1.2.0/24"
+      vpn_active_active_enabled           = false
+      public_ip = {
+        name              = "tf-vnet1-GW-PIP"
+        allocation_method = "Dynamic"
+        sku               = "Basic"
+      }
+    },
+    gateway2 = {
+      name                                = "tf-vnet2-GW"
+      type                                = "Vpn"
+      sku                                 = "Basic"
+      generation                          = "Generation1"
+      virtual_network_name                = "tf-vnet2"
+      virtual_network_location            = "East US 2"
+      virtual_network_resource_group_name = "tf-vnet-rg"
+      gateway_subnet_address_prefix       = "12.2.2.0/24"
+      vpn_active_active_enabled           = false
+      public_ip = {
+        name              = "tf-vnet2-GW-PIP"
+        allocation_method = "Dynamic"
+        sku               = "Basic"
+      }
+    }
+  }
+}
+
+variable "Connections" {
+  type = map(object({
+    connection_name = string
+    connection_type = string
+    resource_group  = string
+    location        = string
+    gateway1_ID     = string
+    gateway2_ID     = string
+    shared_key      = string
+  }))
+  default = {
+    connection1 = {
+      connection_name = "tf-vnet1-to-tf-vnet2"
+      connection_type = "Vnet2Vnet"
+      resource_group  = "tf-vnet-rg"
+      location        = "East US 2"
+      gateway1_ID     = "/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourceGroups/tf-vnet-rg/providers/Microsoft.Network/virtualNetworkGateways/tf-vnet1-GW"
+      gateway2_ID     = "/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourceGroups/tf-vnet-rg/providers/Microsoft.Network/virtualNetworkGateways/tf-vnet2-GW"
+      shared_key      = "abc-TesT-456"
+    },
+    connection2 = {
+      connection_name = "tf-vnet2-to-tf-vnet1"
+      connection_type = "Vnet2Vnet"
+      resource_group  = "tf-vnet-rg"
+      location        = "East US 2"
+      gateway1_ID     = "/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourceGroups/tf-vnet-rg/providers/Microsoft.Network/virtualNetworkGateways/tf-vnet2-GW"
+      gateway2_ID     = "/subscriptions/3b9659f0-bc80-4e7f-9e15-6a1d7b15cb10/resourceGroups/tf-vnet-rg/providers/Microsoft.Network/virtualNetworkGateways/tf-vnet1-GW"
+      shared_key      = "abc-TesT-456"
+    }
+  }
+}

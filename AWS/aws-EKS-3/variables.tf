@@ -1,6 +1,6 @@
 variable "cluster" {
   default = {
-    name               = "bc-112"
+    name               = "bc-111"
     kubernetes_version = "1.23"
     vpc = {
       vpc_id = "vpc-009470e55cc89e05e"
@@ -12,7 +12,7 @@ variable "cluster" {
     tags = {
       "Created By"  = "Sumanth Mysore"
       "owner"       = "sumanth.mysore@zemosolabs.com"
-      "description" = "EKS Cluster created for Bootcamp-112 using Terraform"
+      "description" = "EKS Cluster created for Bootcamp-111 using Terraform"
     }
     endpoint_public_access = true
   }
@@ -35,7 +35,7 @@ variable "node_group" {
     desired_size   = number
   })
   default = {
-    name           = "bc-112-eks-node"
+    name           = "bc-111-eks-node"
     instance_types = ["t3.medium"]
     min_size       = 2
     max_size       = 2

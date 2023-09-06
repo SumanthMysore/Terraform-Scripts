@@ -1,0 +1,67 @@
+subnets = {
+      + vnet1_subnet1 = {
+          + address_prefixes                               = [
+              + "11.1.0.0/24",
+            ]
+          + delegation                                     = []
+          + enforce_private_link_endpoint_network_policies = (known after apply)
+          + enforce_private_link_service_network_policies  = (known after apply)
+          + id                                             = (known after apply)
+          + name                                           = "vnet1_subnet1"
+          + private_endpoint_network_policies_enabled      = (known after apply)
+          + private_link_service_network_policies_enabled  = (known after apply)
+          + resource_group_name                            = "fw-rg"
+          + service_endpoint_policy_ids                    = null
+          + service_endpoints                              = null
+          + timeouts                                       = null
+          + virtual_network_name                           = "vnet1"
+        }
+      + vnet1_subnet2 = {
+          + address_prefixes                               = [
+              + "11.1.1.0/26",
+            ]
+          + delegation                                     = []
+          + enforce_private_link_endpoint_network_policies = (known after apply)
+          + enforce_private_link_service_network_policies  = (known after apply)
+          + id                                             = (known after apply)
+          + name                                           = "AzureFirewallManagementSubnet"
+          + private_endpoint_network_policies_enabled      = (known after apply)
+          + private_link_service_network_policies_enabled  = (known after apply)
+          + resource_group_name                            = "fw-rg"
+          + service_endpoint_policy_ids                    = null
+          + service_endpoints                              = null
+          + timeouts                                       = null
+          + virtual_network_name                           = "vnet1"
+        }
+      + vnet1_subnet3 = {
+          + address_prefixes                               = [
+              + "11.1.2.0/26",
+            ]
+          + delegation                                     = []
+          + enforce_private_link_endpoint_network_policies = (known after apply)
+          + enforce_private_link_service_network_policies  = (known after apply)
+          + id                                             = (known after apply)
+          + name                                           = "AzureFirewallSubnet"
+          + private_endpoint_network_policies_enabled      = (known after apply)
+          + private_link_service_network_policies_enabled  = (known after apply)
+          + resource_group_name                            = "fw-rg"
+          + service_endpoint_policy_ids                    = null
+          + service_endpoints                              = null
+          + timeouts                                       = null
+          + virtual_network_name                           = "vnet1"
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
