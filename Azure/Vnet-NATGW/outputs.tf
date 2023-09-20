@@ -7,5 +7,5 @@ output "pips" {
 }
 
 output "subnets" {
-  value = azurerm_subnet.subnets
+  value = data.azurerm_subnet.existing_subnets
 }
