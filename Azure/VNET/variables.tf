@@ -1,7 +1,7 @@
 variable "resource_group" {
   type = map(string)
   default = {
-    name     = "vnet-rg-2"
+    name     = "sumanthmysore-rg1"
     location = "East US"
   }
 }
@@ -21,14 +21,14 @@ variable "vnets" {
         "environment" = "dev"
       }
     },
-    "vnet2" = {
-      name          = "vnet2"
-      address_space = ["11.2.0.0/16"]
-      tags = {
-        "owner"       = "sumanth.mysore@zemosolabs.com"
-        "environment" = "dev"
-      }
-    },
+    # "vnet2" = {
+    #   name          = "vnet2"
+    #   address_space = ["11.2.0.0/16"]
+    #   tags = {
+    #     "owner"       = "sumanth.mysore@zemosolabs.com"
+    #     "environment" = "dev"
+    #   }
+    # },
   }
 }
 
@@ -50,15 +50,15 @@ variable "subnets" {
       virtual_network_name = "vnet1"
     },
 
-    "vnet2_subnet1" = {
-      name                 = "vnet2_subnet1"
-      address_space        = ["11.2.0.0/24"]
-      virtual_network_name = "vnet2"
-    },
-    "vnet2_subnet2" = {
-      name                 = "vnet2_subnet2"
-      address_space        = ["11.2.1.0/24"]
-      virtual_network_name = "vnet2"
-    }
+    # "vnet2_subnet1" = {
+    #   name                 = "vnet2_subnet1"
+    #   address_space        = ["11.2.0.0/24"]
+    #   virtual_network_name = "vnet2"
+    # },
+    # "vnet2_subnet2" = {
+    #   name                 = "vnet2_subnet2"
+    #   address_space        = ["11.2.1.0/24"]
+    #   virtual_network_name = "vnet2"
+    # }
   }
 }

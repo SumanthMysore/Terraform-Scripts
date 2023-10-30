@@ -106,4 +106,3 @@ resource "azurerm_firewall" "basic_sku_FWs" {
 
   firewall_policy_id = [for policy in local.basic_sku_fw_policies : azurerm_firewall_policy.basic_sku_fw_policies[policy].id if azurerm_firewall_policy.basic_sku_fw_policies[policy].name == each.value.firewall_policy.name][0]
 }
-

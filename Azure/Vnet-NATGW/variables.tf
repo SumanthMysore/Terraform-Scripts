@@ -2,21 +2,6 @@ variable "resource_group" {
   type = map(string)
 }
 
-variable "vnet" {
-  type = object({
-    name          = string
-    address_space = list(string)
-    tags          = map(string)
-  })
-}
-
-variable "subnets" {
-  type = map(object({
-    name          = string
-    address_space = list(string)
-  }))
-}
-
 variable "nat_gateways" {
   type = map(object({
     name                    = string
@@ -26,13 +11,13 @@ variable "nat_gateways" {
       sku               = string
       allocation_method = string
     })
-    subnet_name = string
   }))
 }
 
-variable "existing_subnets" {
+variable "nat_gateway_subnet_associations" {
   type = map(object({
-    name                 = string
+    nat_gateway_name     = string
+    subnet_name          = string
     virtual_network_name = string
     resource_group_name  = string
   }))
